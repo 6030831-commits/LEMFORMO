@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "google-sheets": {
+      "command": "uvx",
+      "args": ["mcp-google-sheets@latest"],
+      "env": {
+        "SERVICE_ACCOUNT_PATH": "/абсолютный/путь/к/service-account.json",
+        "DRIVE_FOLDER_ID": "",
+        "ENABLED_TOOLS": "get_sheet_data,update_cells,batch_update_cells,list_sheets"
+      }
+    }
+  }
+}

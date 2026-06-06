@@ -1,0 +1,23 @@
+# локальные оверрайды (не коммитить)
+*.local.*
+.claude/settings.local.json
+CLAUDE.local.md
+
+# секреты
+.env
+.env.*
+service-account.json
+*.key
+*.pem
+credentials*.json
+
+# артефакты разработки
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.DS_Store
+
+# выходные расчёты (по желанию — раскомментировать)
+# outputs/
+# *.xlsx
