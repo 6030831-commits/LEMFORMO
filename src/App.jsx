@@ -102,8 +102,8 @@ const SYSTEM_PROMPT = `Ты — анализатор технических че
 
 // ── Claude API ────────────────────────────────────────────────
 async function callClaude(messages, system) {
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error("API ключ не задан. Создайте .env.local с VITE_ANTHROPIC_API_KEY=sk-ant-…");
+  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY || localStorage.getItem("lemformo_api_key") || "";
+  if (!apiKey) throw new Error("API ключ не задан. Введите ключ Anthropic в поле на экране загрузки.");
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -232,6 +232,7 @@ export default function App() {
   const [fileName, setFileName] = useState("");
   const [busy, setBusy]         = useState(false);
   const [err, setErr]           = useState("");
+  const [apiKeyInput, setApiKeyInput] = useState(() => localStorage.getItem("lemformo_api_key") || "");
   const fileB64  = useRef(null);
   const fileMime = useRef(null);
 
@@ -590,6 +591,19 @@ export default function App() {
         {/* ══ STAGE 1: Upload ══ */}
         {(stage === "upload" || stage === "analyzing") && (
           <div style={{ border: "1px dashed #333", borderRadius: 6, padding: 40, textAlign: "center" }}>
+            {!import.meta.env.VITE_ANTHROPIC_API_KEY && (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 10, color: "#555", marginBottom: 5 }}>Anthropic API ключ (сохраняется в браузере)</div>
+                <input
+                  type="password"
+                  value={apiKeyInput}
+                  placeholder="sk-ant-api03-…"
+                  onChange={e => { setApiKeyInput(e.target.value); localStorage.setItem("lemformo_api_key", e.target.value); }}
+                  style={{ ...S.inp, width: 340, fontFamily: "monospace", fontSize: 12 }}
+                />
+                {apiKeyInput && <div style={{ fontSize: 9, color: "#4a4", marginTop: 3 }}>✓ ключ сохранён</div>}
+              </div>
+            )}
             <input type="file" accept="image/*,application/pdf" onChange={onFile} style={{ marginBottom: 16, color: "#aaa" }} />
             {fileName && <div style={{ fontSize: 12, color: "#555", marginBottom: 16 }}>{fileName}</div>}
             <button onClick={analyze} disabled={busy || !fileName}
